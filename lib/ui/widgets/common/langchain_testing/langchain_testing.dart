@@ -18,7 +18,7 @@ class LangchainTesting extends StackedView<LangchainTestingModel> {
         child: Center(
           child: ListView(
             children: [
-              Text(viewModel.llmResponse),
+              Text(viewModel.chatHistory),
               verticalSpaceMedium,
               TextField(
                 controller: viewModel.inputController,
@@ -27,7 +27,7 @@ class LangchainTesting extends StackedView<LangchainTestingModel> {
               ElevatedButton(
                 onPressed: () {
                   debugPrint(viewModel.inputController.text);
-                  viewModel.invokeLLM(viewModel.inputController.text);
+                  viewModel.invokeLLM(viewModel.inputController.text, viewModel.chatHistory);
                 },
                 child: Text('Invoke LLM'),
               ),
@@ -41,6 +41,10 @@ class LangchainTesting extends StackedView<LangchainTestingModel> {
   @override
   LangchainTestingModel viewModelBuilder(
     BuildContext context,
-  ) =>
-      LangchainTestingModel();
+  ) {
+    final viewModel = LangchainTestingModel();
+    viewModel.initialize();
+    return viewModel;
+
+  }
 }
