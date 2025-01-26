@@ -5,12 +5,13 @@ import 'package:langchain/langchain.dart';
 import 'package:langchain_ollama/langchain_ollama.dart';
 
 class LangchainTestingModel extends BaseViewModel {
-  String ragFilePath = '/Users/jeremy/Development/Apps/winfo_ai_journaling_app/lib/ui/widgets/common/langchain_testing/journal_entries.txt';
+  String ragFilePath =
+      '/Users/jeremy/Development/Apps/winfo_ai_journaling_app/lib/ui/widgets/common/langchain_testing/journal_entries.txt';
   TextEditingController inputController = TextEditingController();
   ChatOllama llm = ChatOllama();
   String llmResponse = '';
   String chatHistory = '';
-  
+
   // Add late initialization for retriever
   late VectorStoreRetriever _retriever;
   bool _isInitialized = false;
@@ -29,9 +30,9 @@ class LangchainTestingModel extends BaseViewModel {
     }
 
     debugPrint('Invoking LLM with input: $input');
-    chatHistory += '\n\n User: $input';
+    chatHistory += '\n\n You: $input';
     rebuildUi();
-    
+
     final promptTemplate = ChatPromptTemplate.fromTemplate('''
 Answer the following question based on the given context:
 {context}
@@ -51,7 +52,7 @@ Question: {question}''');
         const StringOutputParser();
 
     setBusy(true);
-    chatHistory += '\n\n MeJournal: ';
+    chatHistory += '\n\n Echo: ';
     final stream = chain.stream(input);
     final chunks = <Object>[];
     await for (final chunk in stream) {
