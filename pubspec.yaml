@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   langchain: ^0.7.7+2
+  langchain_community: ^0.2.2
   langchain_ollama: ^0.3.2+2
   stacked: ^3.4.0
   stacked_services: ^1.1.0
