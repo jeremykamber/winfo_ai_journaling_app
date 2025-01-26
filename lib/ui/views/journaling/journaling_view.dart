@@ -26,9 +26,11 @@ class JournalingView extends StackedView<JournalingViewModel> {
                 Stack(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 20),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 32, vertical: 24),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(25),
@@ -71,8 +73,11 @@ class JournalingView extends StackedView<JournalingViewModel> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 20, right: 20, left: 20),
-                  child: AiPromptBar(onSend: (String text) => viewModel.askAI(viewModel.promptController.text)),
+                  padding:
+                      const EdgeInsets.only(bottom: 20, right: 20, left: 20),
+                  child: AiPromptBar(
+                      onSend: (String text) =>
+                          viewModel.askAI(viewModel.promptController.text)),
                 ),
               ] else ...[
                 const SizedBox(height: 40),
@@ -92,9 +97,11 @@ class JournalingView extends StackedView<JournalingViewModel> {
                 Stack(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 20),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 32, vertical: 24),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(25),

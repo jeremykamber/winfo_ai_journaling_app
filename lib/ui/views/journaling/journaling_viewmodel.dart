@@ -11,32 +11,26 @@ class JournalingViewModel extends BaseViewModel {
   late final AiJournalingAssistantService _assistantService;
   bool _isInitialized = false;
   bool showChatPanel = false;
-  String loadingState = '';
+  String get loadingState => _assistantService.loadingState;
 
   JournalingViewModel() {
     _assistantService = AiJournalingAssistantService();
   }
 
   Future<void> initialize() async {
-    loadingState = 'Initializing...';
-    notifyListeners();
     if (_isInitialized) return;
     await _assistantService.initialize();
     _isInitialized = true;
-    loadingState = '';
     notifyListeners();
   }
 
   Future<void> saveJournalEntry() async {
-    loadingState = 'Saving journal entry...';
-    notifyListeners();
     if (journalController.text.isNotEmpty) {
       final entry =
           '[DATE: ${DateTime.now().toIso8601String()}]\n${journalController.text}';
       journalEntries.add(entry);
       _assistantService.addEntryToRAG(entry); // Appends entry to the RAG file
       showChatPanel = true;
-      loadingState = '';
       notifyListeners();
     }
   }
@@ -48,11 +42,11 @@ class JournalingViewModel extends BaseViewModel {
   }
 
   Future<void> askAI(String prompt) async {
+    debugPrint('Prompt: $prompt');
     messages.add({'text': prompt, 'isAi': false}); // User message
     if (!_isInitialized) await initialize();
 
     setBusy(true);
-    loadingState = 'Thinking...';
     notifyListeners();
 
     final existingChatData = journalEntries.join('\n\n');
@@ -73,7 +67,6 @@ class JournalingViewModel extends BaseViewModel {
     }
 
     setBusy(false);
-    loadingState = '';
     promptController.clear();
     notifyListeners();
   }

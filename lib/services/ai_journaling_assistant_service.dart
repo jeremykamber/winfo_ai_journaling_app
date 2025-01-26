@@ -4,13 +4,14 @@ import 'package:langchain_ollama/langchain_ollama.dart';
 import 'package:langchain_community/langchain_community.dart';
 import 'dart:io';
 
-class AiJournalingAssistantService {
+class AiJournalingAssistantService extends ChangeNotifier {
   static const String _tag = 'AiJournalingAssistantService';
   String ragFilePath =
       '/Users/jeremy/Development/Apps/winfo_ai_journaling_app/lib/ui/widgets/common/langchain_testing/journal_entries.txt';
   late VectorStoreRetriever _retriever;
   bool _isInitialized = false;
-  final ChatOllama llm = ChatOllama();
+  final ChatOllama llm = ChatOllama(defaultOptions: ChatOllamaOptions(model: 'granite3.1-moe'));
+  String loadingState = '';
 
   AiJournalingAssistantService() {
     debugPrint('[$_tag] Service instantiated');
@@ -18,16 +19,18 @@ class AiJournalingAssistantService {
 
   Future<void> initialize() async {
     debugPrint('[$_tag] Initializing service');
-    if (_isInitialized) {
-      debugPrint('[$_tag] Service already initialized, skipping');
-      return;
-    }
+    loadingState = 'Loading model...';
+    notifyListeners();
     try {
       _retriever = await _getRagRetriever();
       _isInitialized = true;
       debugPrint('[$_tag] Service successfully initialized');
+      loadingState = '';
+      notifyListeners();
     } catch (e) {
       debugPrint('[$_tag] Error initializing service: $e');
+      loadingState = 'Error initializing model';
+      notifyListeners();
       rethrow;
     }
   }
@@ -37,10 +40,9 @@ class AiJournalingAssistantService {
     required String existingChatData,
   }) async* {
     debugPrint('[$_tag] Invoking LLM with input: $input');
-    if (!_isInitialized) {
-      debugPrint('[$_tag] Service not initialized, initializing now');
-      await initialize();
-    }
+    loadingState = 'Thinking...';
+    notifyListeners();
+    await initialize();
 
     try {
       final promptTemplate = ChatPromptTemplate.fromTemplate('''
@@ -63,9 +65,15 @@ Question: {question}''');
           const StringOutputParser();
       debugPrint('[$_tag] Chain created, starting stream');
 
+      loadingState = 'Generating response...';
+      notifyListeners();
       yield* chain.stream(input);
+      loadingState = '';
+      notifyListeners();
     } catch (e) {
       debugPrint('[$_tag] Error in invokeLLM: $e');
+      loadingState = 'Error generating response';
+      notifyListeners();
       rethrow;
     }
   }
